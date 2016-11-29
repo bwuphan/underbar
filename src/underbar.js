@@ -306,27 +306,18 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {
-    let stored = {};
-    return function(){
-      if(arguments in stored){
-        return stored[arguments];
-      } else {
-        return (stored[arguments] = func.apply(this,arguments));
+   _.memoize = function(func) {
+    let result = {};
+    return function() {
+      let string = ""
+      for(let key in arguments){
+        string += arguments[key];
       }
+      if (result[string] === undefined) {
+        result[string] = func.apply(this, arguments); 
+      }
+      return result[string];
     }
-     /*var memo = {};
-      var slice = Array.prototype.slice;
-
-  return function() {
-    var args = slice.call(arguments);
-
-    if (args in memo)
-      return memo[args];
-    else
-      return (memo[args] = func.apply(this, args));
-
-  }*/
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -353,6 +344,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    let newArray = array.slice();
+    let current = array.length, temp, randNum;
+    while (0 !== current) {
+      randNum = Math.floor(Math.random() * current);
+      current -= 1;
+      temp = newArray[current];
+      newArray[current] = newArray[randNum];
+      newArray[randNum] = temp;
+    }
+    return newArray;
   };
 
 
